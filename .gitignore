@@ -7,3 +7,9 @@ vendor
 .idea
 .localized
 .vscode
+nbproject
+bin/behat
+bin/doctrine-dbal
+bin/phpunit
+composer.lock
+composer.phar
