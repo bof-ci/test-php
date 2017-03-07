@@ -3,7 +3,7 @@ SOLUTION
 
 Estimation
 ----------
-Estimated: n hours
+Estimated: 8 hours
 
 Spent: x hours
 
