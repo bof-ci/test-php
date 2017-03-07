@@ -15,7 +15,7 @@ class ReportYearlyCommand extends ContainerAwareCommand
         $this
             ->setName('report:profiles:yearly')
             ->setDescription('Page views report')
-            ->addArgument('year', InputArgument::REQUIRED, 'Year for the report')
+            ->addArgument('year', InputArgument::OPTIONAL, 'Year for the report')
         ;
     }
 
@@ -28,11 +28,15 @@ class ReportYearlyCommand extends ContainerAwareCommand
         // Show data in a table - headers, data
         $io->table(['Profile'], $profiles);
 
-        $monthlyViewsPerProfile = $this->getMonthlyBreakDownOfTotalViewsPerProfile($theta = $input->getArgument('year'));
-
+        $monthlyViewsPerProfile = $this->getMonthlyBreakDownOfTotalViewsPerProfile(2017);
+        $rows = [];
+        foreach($monthlyViewsPerProfile as $profile)
+        {
+            $rows[] = [$profile['profile_id'], $profile['profile_name'], $profile['month'], $profile['views']];
+        }
         $io->table(
             ['Profile Id', 'Profile Name', 'Month', 'Views'],
-            [$monthlyViewsPerProfile['profile_id'], $monthlyViewsPerProfile['profile_name'], $monthlyViewsPerProfile['month'], $monthlyViewsPerProfile['views']]
+            $rows
         );
 
     }
@@ -63,8 +67,10 @@ class ReportYearlyCommand extends ContainerAwareCommand
      * @param $year
      * @return array
      */
-    public function getMonthlyBreakDownOfTotalViewsPerProfile($year)
+    public function getMonthlyBreakDownOfTotalViewsPerProfile($y)
     {
+//        return [];
+
         $db = $this->getContainer()->get('database_connection');
 
         $viewsPerProfile = $db->query(
@@ -72,11 +78,9 @@ class ReportYearlyCommand extends ContainerAwareCommand
                 from views as v
                 join profiles as p
                 on v.profile_id = p.profile_id
-                where year(v.date) = :year
+                where year(v.date) = 2017
                 group by p.profile_id, p.profile_name, Month(v.date)
-                order by p.profile_name asc',
-            ['year' => (int) $year]
-        )->fetchAll();
+                order by p.profile_name asc');
 
         return $viewsPerProfile;
     }
