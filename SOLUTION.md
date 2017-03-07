@@ -12,7 +12,7 @@ Solution
 --------
 My development environment for this project is on a Homestead Vagrant box running PHP 7.1.
 
-I'm using PHPSpec to run test for this project.
+I'm using PHPSpec and Behat to run test for this project.
 
 $ npm install gulp -g "To install Gulp globally"
 
