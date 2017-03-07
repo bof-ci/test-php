@@ -23,6 +23,7 @@ class ReportYearlyCommand extends ContainerAwareCommand
         $io = new SymfonyStyle($input,$output);
 
         $profiles = $this->getProfiles();
+        $monthlyViewsPerProfile = $this->getMonthlyBreakDownOfTotalViewsPerProfile();
 
         // Show data in a table - headers, data
         $io->table(['Profile'], $profiles);
@@ -52,10 +53,15 @@ class ReportYearlyCommand extends ContainerAwareCommand
 
     /**
      * Get monthly breakdown of total views per profile.
-     * 
+     *
      * @return array
      */
     public function getMonthlyBreakDownOfTotalViewsPerProfile()
+    {
+        return [];
+    }
+
+    public function getProfilesNamesListedInAlphabeticalOrder()
     {
         return [];
     }

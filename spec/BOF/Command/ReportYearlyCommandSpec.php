@@ -25,5 +25,13 @@ class ReportYearlyCommandSpec extends ObjectBehavior
         $this->getMonthlyBreakDownOfTotalViewsPerProfile()->shouldHaveCount(0);
     }
 
+    function it_should_return_an_array_the_profiles_names_listed_in_alphabetical_order()
+    {
+        $this->getProfilesNamesListedInAlphabeticalOrder()->shouldHaveCount(0);
+    }
 
+    function it_should_return_na_when_data_is_not_available()
+    {
+        $this->getProfilesNamesListedInAlphabeticalOrder()->shouldHaveCount(0);
+    }
 }
