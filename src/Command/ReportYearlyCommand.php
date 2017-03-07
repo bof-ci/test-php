@@ -78,9 +78,9 @@ class ReportYearlyCommand extends ContainerAwareCommand
                 from views as v
                 join profiles as p
                 on v.profile_id = p.profile_id
-                where year(v.date) = 2017
-                group by p.profile_id, p.profile_name, Month(v.date)
-                order by p.profile_name asc');
+                where year(v.date) = :y
+                group by p.profile_name
+                order by p.profile_name asc', ['year' => $y]);
 
         return $viewsPerProfile;
     }
