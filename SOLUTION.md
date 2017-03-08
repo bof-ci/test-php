@@ -22,3 +22,10 @@ $ npm install gulp gulp-phpspec gulp-notify gulp-run --save-dev "To install Gulp
 
 $ npm install "To pull in all dependencies"
 
+# Tests #
+
+$ gulp "To run the watch and bof tasks"
+
+$ vendor/bin/behat "To run behat"
+
+

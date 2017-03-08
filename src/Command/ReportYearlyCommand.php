@@ -15,7 +15,7 @@ class ReportYearlyCommand extends ContainerAwareCommand
         $this
             ->setName('report:profiles:yearly')
             ->setDescription('Page views report')
-            ->addArgument('year', InputArgument::OPTIONAL, 'Year for the report')
+            ->addArgument('year', InputArgument::OPTIONAL, 'Year for the report', 2017)
         ;
     }
 
@@ -49,14 +49,14 @@ class ReportYearlyCommand extends ContainerAwareCommand
         $db = $this->getContainer()->get('database_connection');
         $profiles = $db->query('select profile_name from profiles')->fetchAll();
 
-        $profiles = [
-                        ["profile_name" => "Karl Lagerfeld"],
-                        ["profile_name" => "Anna Wintour"],
-                        ["profile_name" => "Tom Ford"],
-                        ["profile_name" => "Tom Ford"],
-                        ["profile_name" => "Pierre Alexis Dumas"],
-                        ["profile_name" => "Sandra Choi"]
-                    ];
+//        $profiles = [
+//                        ["profile_name" => "Karl Lagerfeld"],
+//                        ["profile_name" => "Anna Wintour"],
+//                        ["profile_name" => "Tom Ford"],
+//                        ["profile_name" => "Tom Ford"],
+//                        ["profile_name" => "Pierre Alexis Dumas"],
+//                        ["profile_name" => "Sandra Choi"]
+//                    ];
 
         return $profiles;
     }
@@ -64,7 +64,7 @@ class ReportYearlyCommand extends ContainerAwareCommand
     /**
      * Get monthly breakdown of total views per profile.
      *
-     * @param $year
+     * @param $y
      * @return array
      */
     public function getMonthlyBreakDownOfTotalViewsPerProfile($y)
