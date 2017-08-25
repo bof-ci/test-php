@@ -33,7 +33,7 @@ class TestDataResetCommand extends ContainerAwareCommand
         $progress = $io->createProgressBar(count($profiles));
         foreach ($profiles as $profile) {
 
-            $profileId = $profile['profile_id'];
+            $profileId = $profile['id'];
             $currentDate = $startDate;
 
             while ($currentDate <= $endDate) {
@@ -56,6 +56,6 @@ class TestDataResetCommand extends ContainerAwareCommand
             }
             $progress->advance();
         }
-
+        $io->newLine();
     }
 }
