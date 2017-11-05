@@ -15,7 +15,7 @@ Spent: 3 hours
 Solution
 --------
 
-# Instalation
+### Instalation
 1. SQL import (add indekses): upgrade.sql
 
 2. Run: 
@@ -24,7 +24,7 @@ Solution
 
     Year of your choosing: $> bin/console report:profiles:yearly 2015
 
-# 4. Test cases
+### 4. Test cases
  
  1. Februar - prestopno leto
  2. Profil celo leto nima podatkov
@@ -34,7 +34,7 @@ Solution
  6. 
  
  
-# 5. Implementation
+### 5. Implementation
 **Podatkovna baza (upgrade.sql)**
 Predno začel z delom nastavil indekse:
   profiles: 
@@ -61,4 +61,4 @@ Pri fetchanju podatkov sem uporabil:
 Expect "n/a": Sem uredil znotraj PHPja, ker z uporabo funkcij array_walk. Ocenil sem da glede na majhno št. vrstic ni ni potrebe po SQL rešitvi, ki bi zahtevala uporabo SUBQuerijev. 
  
 
-# 6. Better product
+### 6. Better product
