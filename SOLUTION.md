@@ -36,6 +36,7 @@ Solution
  
 ### 5. Implementation
 **Podatkovna baza (upgrade.sql)**
+
 Predno začel z delom nastavil indekse:
 
   profiles: 
@@ -49,19 +50,21 @@ Predno začel z delom nastavil indekse:
  
 **App**
   
-Nagradil, da se lahko vnese argument leto:
+1. Nagradil, da se lahko vnese argument leto:
+    
+    $> bin/console report:profiles:yearly - Izpiše za trenutno leto
+    $> bin/console report:profiles:yearly 2015 - Izpiše za leto podano v argumentu
 
-$> bin/console report:profiles:yearly - Izpiše za trenutno leto
 
-$> bin/console report:profiles:yearly 2015 - Izpiše za leto podano v argumentu
+2. Pri fetchanju podatkov sem uporabil:
+      - LEFT JOIN - ker mogoče kakšen profil nima zapisov
+      - GROUP BY + SUM + IF - ker vso delo opravim MySQL, prav tako ni nobenih subquerijev. 
+      - AND v.date >= '" . $year . "-01-01' AND v.date<= '" . $year . "-12-31' - v skopu joina sem takoj podatke zožal samo na izbrano leto
+      - Prestopno leto: V februarju je lahko prestopno leto, zato sem vedno uporabil agrument v.date<= '" . $year . "-02-29'. Sem testiral in Mysql pravilno sešteva datume.
+      
+3. Expect "n/a": 
 
-Pri fetchanju podatkov sem uporabil:
-  - LEFT JOIN - ker mogoče kakšen profil nima zapisov
-  - GROUP BY + SUM + IF - ker vso delo opravim MySQL, prav tako ni nobenih subquerijev. 
-  - AND v.date >= '" . $year . "-01-01' AND v.date<= '" . $year . "-12-31' - v skopu joina sem takoj podatke zožal samo na izbrano leto
-  - Prestopno leto: V februarju je lahko prestopno leto, zato sem vedno uporabil agrument v.date<= '" . $year . "-02-29'. Sem testiral in Mysql pravilno sešteva datume.
-  
-Expect "n/a": Sem uredil znotraj PHPja, ker z uporabo funkcij array_walk. Ocenil sem da glede na majhno št. vrstic ni ni potrebe po SQL rešitvi, ki bi zahtevala uporabo SUBQuerijev. 
+    Sem uredil znotraj PHPja, ker z uporabo funkcij array_walk. Ocenil sem da glede na majhno št. vrstic ni ni potrebe po SQL rešitvi, ki bi zahtevala uporabo SUBQuerijev. 
  
 
 ### 6. Better product
