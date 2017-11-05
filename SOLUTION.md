@@ -37,6 +37,7 @@ Solution
 ### 5. Implementation
 **Podatkovna baza (upgrade.sql)**
 Predno začel z delom nastavil indekse:
+
   profiles: 
    - profile_id: primary indeks + AI;
    - profile_name: index - zaradi sort orderja, tukaj smiselno samo če bo postalo veliko imen
@@ -49,7 +50,9 @@ Predno začel z delom nastavil indekse:
 **App**
   
 Nagradil, da se lahko vnese argument leto:
+
 $> bin/console report:profiles:yearly - Izpiše za trenutno leto
+
 $> bin/console report:profiles:yearly 2015 - Izpiše za leto podano v argumentu
 
 Pri fetchanju podatkov sem uporabil:
