@@ -90,12 +90,15 @@ Predno začel z delom nastavil indekse:
 5. Izdelava WEB strani, da se podatki lahko pregledujejo v brskalniku. Podatke lahko vizualiziramo z grafi, dostopni iz katerekoli lokacije. 
    - PHP aplikacija + HTML, enostaven flat design
    - Predpostavka, da samo en naročnik dostopa, zato bi uporabil kar Basic auth (spletna strani ni javno dostopna, nimamo pa s tem dostanega dela)
-   3h
+   - 3h
+   
    - Vizualizacija podatkov z grafi (odvisno kaj vse in kako bi prikazovali). Uporabil bi knjižnico jqplot, ki jo poznam. Če bi uporabil bi to vplivalo na čas.    
    2-3h
 6. Mail report
    - 1x mesečno se naročniku pošlje mail report s podatki, kot jo aplikacija izpisuje. 
-   Ker Synphony ne poznam zelo težko ocenim realni čas. V tutorialu https://github.com/symphonycms/symphony-2/wiki/Email-in-Symphony sicer izgleda enostavno :). 
+   
+   Ker Synphony ne poznam zelo težko ocenim realni čas. V tutorialu https://github.com/symphonycms/symphony-2/wiki/Email-in-Symphony sicer izgleda enostavno :).
+    
    2-4h
   
 
