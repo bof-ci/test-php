@@ -16,11 +16,13 @@ Solution
 --------
 
 # Instalation
-SQL import (add indekses): upgrade.sql
+1. SQL import (add indekses): upgrade.sql
 
-Run: 
-Current year: $> bin/console report:profiles:yearly
-Year of your choosing: $> bin/console report:profiles:yearly 2015
+2. Run: 
+
+    Current year: $> bin/console report:profiles:yearly
+
+    Year of your choosing: $> bin/console report:profiles:yearly 2015
 
 # 4. Test cases
  
@@ -33,7 +35,7 @@ Year of your choosing: $> bin/console report:profiles:yearly 2015
  
  
 # 5. Implementation
-*Podatkovna baza (upgrade.sql)
+**Podatkovna baza (upgrade.sql)**
 Predno začel z delom nastavil indekse:
   profiles: 
    - profile_id: primary indeks + AI;
@@ -44,7 +46,7 @@ Predno začel z delom nastavil indekse:
    - Mogoče bom dodal še indeks, vedle po testiranju:  profile_id+date ali samo odate
       Sem testiral in noben od teh dveh primerov ne vpliva na performanco. 
  
-*App
+**App**
   
 Nagradil, da se lahko vnese argument leto:
 $> bin/console report:profiles:yearly - Izpiše za trenutno leto
