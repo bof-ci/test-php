@@ -42,12 +42,14 @@ class ReportYearlyCommand extends ContainerAwareCommand
 
         $year_report = $this->getYearReport();
 
+        if(empty($year_report)) {
+            echo "No data available for year ".$year."\n";
+            return;
+        }
+
         $year_report = $this->createCalendar($this->structureReport($year_report));
 
         $io->table(['Profile', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], $year_report);
-
-        // Show data in a table - headers, data
-        //$io->table(['Profile'], $profiles);
 
     }
 
