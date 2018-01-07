@@ -1,3 +1,7 @@
+Execution Time
+---------------------------
+2 hours
+
 Backend Developer Test
 ======================
 The Business of Fashion uses various tests to assess whether a candidate is best suited to the expectations of the role advertised and the offer given.
