@@ -42,6 +42,7 @@ class BusinessAnalyst
             }
 
             $output[$result['profile_name']][$result['year']][(int)$result['month']] = $result['views'];
+            $output[$result['year']][(int)$result['month']][$result['profile_name']] = $result['views'];
         }
 
         $this->minYear = $minYear;
@@ -52,6 +53,7 @@ class BusinessAnalyst
 
     public function fillMissingData(array $results)
     {
+        var_dump($results); die;
         foreach ($results as $person => &$result)
         {
             for ($year = $this->minYear; $year <= $this->maxYear; $year++) {
