@@ -13,7 +13,7 @@ Then I should see an output
 Given The user 'Anna Wintour' Join the company in September 2014
 When I execute the Yearly Views report
 And Set the Year 2014
-Then The value for this user should be 'n/a' before
+Then The value for this user should be 'n/a' before September
 And The User should have values after September
 
 Given The user 'Karl Lagerfeld' Join the company in January 2018
