@@ -8,90 +8,151 @@
 
 namespace BOF\AppBundle;
 
-
-use function foo\func;
-
 class BusinessAnalyst
 {
     private $results;
+    private $year;
+
     const JANUARY = 1;
     const DECEMBER = 12;
+
     const NA = 'n/a';
 
-    public $minYear;
-    public $maxYear;
+    private $peoples = [];
 
+    /**
+     * setResults
+     *
+     * @param $results
+     * @return $this
+     */
     public function setResults($results)
     {
         $this->results = $results;
         return $this;
     }
 
-    public function formatResult()
+    /**
+     * formatResult
+     *
+     * @return array
+     */
+    public function formatResultPerProfiles()
     {
         $output = [];
-        $minYear = $maxYear = (int) current($this->results)['year'];
         foreach ($this->results as $result)
         {
-            if ($result['year'] <= $minYear) {
-                $minYear = (int) $result['year'];
+            if (!$this->year) {
+                $this->setYear($result['year']);
             }
 
-            if ($result['year'] >= $maxYear) {
-                $maxYear = (int) $result['year'];
+            if (!isset($this->peoples[$result['profile_id']])) {
+                $this->setPeople($result['profile_id'], $result['profile_name']);
             }
 
-            $output[$result['profile_name']][$result['year']][(int)$result['month']] = $result['views'];
-            $output[$result['year']][(int)$result['month']][$result['profile_name']] = $result['views'];
+            $output[$result['profile_id']][(int)$result['month']] = $result['views'];
         }
-
-        $this->minYear = $minYear;
-        $this->maxYear = $maxYear;
 
         return $this->fillMissingData($output);
     }
 
+    /**
+     * setYear
+     *
+     * @param $year
+     */
+    private function setYear($year)
+    {
+        $this->year = $year;
+    }
+
+    /**
+     * getYear
+     *
+     * @return mixed
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * setPeople
+     *
+     * @param $profileId
+     * @param $profileName
+     */
+    private function setPeople($profileId, $profileName)
+    {
+        $this->peoples[$profileId] = $profileName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPeoples()
+    {
+        return $this->peoples;
+    }
+
+    public function getPerson($profileId)
+    {
+        return $this->peoples[$profileId];
+    }
+
+    /**
+     * fillMissingData
+     *
+     * @param array $results
+     * @return array
+     */
     public function fillMissingData(array $results)
     {
-        var_dump($results); die;
-        foreach ($results as $person => &$result)
+        foreach ($results as $personId => &$result)
         {
-            for ($year = $this->minYear; $year <= $this->maxYear; $year++) {
-                if (!isset($result[$year])) {
-                    $result[$year] = [];
-                }
-
-                $result[$year] = array_replace($this->fillAllYear(), $result[$year]);
-            }
-
+            $result = array_replace($this->fillAllYear(), $result);
             ksort($result);
         }
 
         return $results;
     }
 
+    /**
+     * fillAllYear
+     *
+     * @return array
+     */
     private function fillAllYear()
     {
         return array_fill(self::JANUARY, self::DECEMBER, self::NA);
     }
 
-    public function getHeader()
-    {
-        return array_merge(['Profile'], self::getMonths());
-    }
-
-    public static function getMonths()
+    /**
+     * getMonthOfAction
+     *
+     * @return array
+     */
+    private function getMonthOfAction()
     {
         $months = [];
-        for ($m = self::JANUARY; $m <= self::DECEMBER; ++$m){
-            $months[$m] = \DateTime::createFromFormat('!m', $m)->format('F');
+        for ($startMonth = self::JANUARY; $startMonth <= self::DECEMBER; $startMonth++) {
+            $date = date("F", mktime(0, 0, 0, $startMonth, 10));
+            $months[] = substr($date,0,3);
         }
 
         return $months;
     }
 
-    private function getProfiles(array $results)
+    /**
+     * getHeader
+     *
+     * @return array
+     */
+    public function getHeader()
     {
-        return array_unique(array_column($results, 'profile_name'));
+        $months = $this->getMonthOfAction();
+        array_unshift($months, 'Profile ' . $this->getYear());
+
+        return $months;
     }
 }
