@@ -22,7 +22,7 @@ class TestDataResetCommand extends ContainerAwareCommand
         /** @var $db Connection */
         $db = $this->getContainer()->get('database_connection');
         $startDate = strtotime('2014-09-01');
-        $endDate = strtotime('2017-02-11');
+        $endDate = strtotime('2018-08-01');
 
         $dataPerDay = 3;
 
