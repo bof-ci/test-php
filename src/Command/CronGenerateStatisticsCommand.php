@@ -13,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * Generating statistics
  * @package BOF\Command
  */
-class CronGenerateStatistics extends ContainerAwareCommand
+class CronGenerateStatisticsCommand extends ContainerAwareCommand
 {
 
     /**
@@ -96,6 +96,7 @@ class CronGenerateStatistics extends ContainerAwareCommand
         ');
 
         $progressInserting->advance();
+        $io->newLine();
 
     }
 

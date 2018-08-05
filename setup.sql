@@ -1,11 +1,3 @@
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
 DROP DATABASE IF EXISTS `bof_test`;
 CREATE DATABASE IF NOT EXISTS `bof_test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -41,8 +33,8 @@ VALUES
 UNLOCK TABLES;
 
 
-DROP TABLE IF EXISTS `bof_test`.`views`;
-CREATE TABLE `bof_test`.`views` (
+DROP TABLE IF EXISTS `bof_test`.`daily_statistics_views`;
+CREATE TABLE `bof_test`.`statistics_daily_views` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `profile_id` int(11) unsigned NOT NULL,
   `date` date NOT NULL,
@@ -53,15 +45,20 @@ CREATE TABLE `bof_test`.`views` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `date` (`date`,`deleted`,`profile_id`),
   KEY `profile_id` (`profile_id`),
-  CONSTRAINT `views_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `bof_test`.`profiles` (`id`)
+  CONSTRAINT `statistics_daily_views_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `bof_test`.`profiles` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `bof_test`.`views` WRITE;
-/*!40000 ALTER TABLE `bof_test`.`views` DISABLE KEYS */;
 
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+DROP TABLE IF EXISTS `bof_test`.`views`;
+CREATE TABLE `bof_test`.`views` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `profile_id` int(11) unsigned NOT NULL,
+  `date` datetime NOT NULL,
+  `user_data` text,
+  `created` datetime NOT NULL,
+  `updated` datetime NOT NULL,
+  `deleted` datetime DEFAULT '9999-12-31 00:00:00',
+  PRIMARY KEY (`id`),
+  KEY `profile_id` (`profile_id`),
+  CONSTRAINT `views_ibfk_1` FOREIGN KEY (`profile_id`) REFERENCES `bof_test`.`profiles` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
