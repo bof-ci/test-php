@@ -4,6 +4,8 @@ namespace BOF\Command;
 use Doctrine\DBAL\Driver\Connection;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -90,59 +92,65 @@ class TestDataResetCommand extends ContainerAwareCommand
 
         $views = [];
 
-        // Creating the views by profiles
-        $profiles = $this->db->query('SELECT id, profile_name FROM profiles')->fetchAll();
-        $progressProfiles = $io->createProgressBar(count($profiles));
+        try {
+            // Creating the views by profiles
+            $profiles = $this->db->query('SELECT id, name FROM profiles')->fetchAll();
+            $progressProfiles = $io->createProgressBar(count($profiles));
 
-        foreach ($profiles as $profile) {
+            foreach ($profiles as $profile) {
 
-            $profileId = $profile['id'];
+                $profileId = $profile['id'];
 
-            // Maximum 500 views per profile
-            $dataPerDay = rand(0, 500);
+                // Maximum 500 views per profile
+                $dataPerDay = rand(0, 500);
 
-            $io->newLine();
-            $io->text('There will be '.$dataPerDay.' views generated for profile '.$profile['profile_name']);
+                $io->newLine();
+                $io->writeln('There will be '.$dataPerDay.' views generated for profile '.$profile['name']);
 
-            for ($i = 0; $i <= $dataPerDay; $i++) {
+                for ($i = 0; $i <= $dataPerDay; $i++) {
 
-                // Random DateTime between the period
-                $date = $this->faker->dateTimeBetween($startDate, $endDate);
+                    // Random DateTime between the period
+                    $date = $this->faker->dateTimeBetween($startDate, $endDate);
 
-                // Random browser data
-                $browser = $this->faker->chrome;
+                    // Random browser data
+                    $browser = $this->faker->chrome;
 
-                $views[] = [
-                    'profile_id' => $profileId,
-                    'date' => $date->format('Y-m-d H:i:s'),
-                    'user_data' => ['browser' => $browser],
-                    'created' => $dateTimeFormattedNow,
-                    'updated' => $dateTimeFormattedNow
-                ];
+                    $views[] = [
+                        'profile' => $profileId,
+                        'date' => $date->format('Y-m-d H:i:s'),
+                        'user_data' => ['browser' => $browser],
+                        'created' => $dateTimeFormattedNow,
+                        'updated' => $dateTimeFormattedNow
+                    ];
 
 
+                }
+
+                $progressProfiles->advance();
             }
 
-            $progressProfiles->advance();
+            $progressInserting = $io->createProgressBar(count($views));
+
+            // Inserting the data
+            foreach ($views as $view) {
+                $sql = sprintf(
+                    "INSERT INTO views (`profile`, `date`, `user_data`, `created`, `updated`) VALUES (%d, '%s', '%s', '%s', '%s')",
+                    $view['profile'],
+                    $view['date'],
+                    json_encode($view['user_data']),
+                    $view['created'],
+                    $view['updated']
+                );
+                $this->db->query($sql);
+                $progressInserting->advance();
+            }
+
+            // New line at the end
+            $io->newLine();
+
+        } catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
         }
-
-        $progressInserting = $io->createProgressBar(count($views));
-
-        // Inserting the data
-        foreach ($views as $view) {
-            $sql = sprintf(
-                "INSERT INTO views (`profile_id`, `date`, `user_data`, `created`, `updated`) VALUES (%d, '%s', '%s', '%s', '%s')",
-                $view['profile_id'],
-                $view['date'],
-                json_encode($view['user_data']),
-                $view['created'],
-                $view['updated']
-            );
-            $this->db->query($sql);
-            $progressInserting->advance();
-        }
-
-        $io->newLine();
 
     }
 

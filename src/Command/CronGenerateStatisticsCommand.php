@@ -5,6 +5,7 @@ use Doctrine\DBAL\Driver\Connection;
 use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -72,11 +73,11 @@ class CronGenerateStatisticsCommand extends ContainerAwareCommand
         $this->db->query('
         INSERT INTO daily_statistics_views
         
-        (`profile_id`, `date`, `views`, `created`, `updated`) (
+        (`profile`, `date`, `views`, `created`, `updated`) (
             SELECT
             
                 -- Index 1
-                views.profile_id as profile_id,
+                views.profile as profile,
                 
                 -- Index 2
                 DATE(views.date) as date,
@@ -91,11 +92,13 @@ class CronGenerateStatisticsCommand extends ContainerAwareCommand
                 
             FROM views
             WHERE DATE(views.deleted) = "9999-12-31"
-            GROUP BY views.profile_id, DATE(views.date)
+            GROUP BY views.profile, DATE(views.date)
         )
         ');
 
         $progressInserting->advance();
+
+        // New line at the end
         $io->newLine();
 
     }
