@@ -1,14 +1,41 @@
 <?php
 namespace BOF\Command;
 
-use Doctrine\DBAL\Driver\Connection;
+use BOF\Repository\ProfileDataProviderI;
+use BOF\Utils\ProfileDataHelperI;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ReportYearlyCommand extends ContainerAwareCommand
+class ReportYearlyCommand extends Command
 {
+    /**
+     * @var ProfileDataProviderI
+     */
+    private $dataProvider;
+
+    /**
+     * @var ProfileDataHelperI
+     */
+    private $dataHelper;
+
+    /**
+     * ReportYearlyCommand constructor.
+     * @param ProfileDataProviderI $dataProvider
+     * @param ProfileDataHelperI $dataHelper
+     */
+    public function __construct(
+        ProfileDataProviderI $dataProvider,
+        ProfileDataHelperI $dataHelper
+    ) {
+        $this->dataProvider = $dataProvider;
+        $this->dataHelper = $dataHelper;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -17,16 +44,34 @@ class ReportYearlyCommand extends ContainerAwareCommand
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|null|void
+     * @throws \Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $db Connection */
         $io = new SymfonyStyle($input,$output);
-        $db = $this->getContainer()->get('database_connection');
 
-        $profiles = $db->query('SELECT profile_name FROM profiles')->fetchAll();
+        $views = $this->dataProvider->getYearlyResult();
+        $profiles = $this->dataProvider->getAllProfileNames();
 
-        // Show data in a table - headers, data
-        $io->table(['Profile'], $profiles);
+        $data = $this->dataHelper->tableViewDataAssemble($profiles, $views);
 
+        if (empty($data)) {
+
+            $io->text('No data available');
+            $io->newLine();
+        }
+
+        foreach ($data as $year => $formattedData) {
+
+            $header = $this->dataHelper->getMonthsRange();
+            array_unshift($header, sprintf('%s %d', 'Profile', $year));
+
+            // Show data in a table - headers, data
+            $io->table($header, $formattedData);
+        }
     }
 }
