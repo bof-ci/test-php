@@ -59,6 +59,12 @@ class ReportYearlyCommand extends Command
 
         $data = $this->dataHelper->tableViewDataAssemble($profiles, $views);
 
+        if (empty($data)) {
+
+            $io->text('No data available');
+            $io->newLine();
+        }
+
         foreach ($data as $year => $formattedData) {
 
             $header = $this->dataHelper->getMonthsRange();
