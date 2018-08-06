@@ -25,6 +25,8 @@ parameter in order to override the default format (6 hours)
 Because of the reporting nature of this product then it might be a good idea to have a kind of call back function which 
 will send the result by email or as a request to a kind of API endpoint as a final step (8 hours) 
 
+Also filtering the data by profile, year might be useful 
+
 There might be a huge amount of data which might take a significant amount of resources and time to proceed since we 
 request all the data from tables. It would be useful to break down this request to several one for each year, also 
 this kind yearly data looks as a good candidate for table sharding. If we go further we could use queue tasks or simple
