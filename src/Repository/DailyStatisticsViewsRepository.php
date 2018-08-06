@@ -5,15 +5,15 @@ namespace BOF\Repository;
 use BOF\Repository\Common\AbstractRepository;
 
 /**
- * Class ViewsRepository
+ * Class DailyStatisticsViewsRepository
  * @package BOF\Repository
  */
-class ViewsRepository extends AbstractRepository
+class DailyStatisticsViewsRepository extends AbstractRepository
 {
 
     protected function setUp()
     {
-        $this->setTable('views');
+        $this->setTable('daily_statistics_views');
     }
 
 }

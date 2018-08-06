@@ -1,7 +1,7 @@
 <?php
 namespace BOF\Command;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\Config\Definition\Exception\Exception;

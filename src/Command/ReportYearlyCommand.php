@@ -2,13 +2,11 @@
 namespace BOF\Command;
 
 use BOF\Entity\Profile;
-use Doctrine\DBAL\Driver\Connection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -45,7 +43,7 @@ class ReportYearlyCommand extends ContainerAwareCommand
     {
 
         // Setting database
-        $em = $this->getContainer()->get('entity_manager');
+        $em = $this->getContainer()->get('database_connection');
 
         $io = new SymfonyStyle($input,$output);
 
