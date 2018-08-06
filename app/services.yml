@@ -1,4 +1,5 @@
 services:
+
     app.command.test_reset_data:
         class: BOF\Command\TestDataResetCommand
         tags:
@@ -6,5 +7,10 @@ services:
 
     app.command.report_yearly:
         class: BOF\Command\ReportYearlyCommand
+        arguments: ['@app.repository.profile']
         tags:
             - { name: console.command }
+
+    app.repository.profile:
+        class: BOF\Repository\Profile
+        arguments: ['@database_connection']
