@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BOF/Repository/ProfilesRepository")
  * @ORM\Table(name="profiles")
  */
 class ProfileEntity

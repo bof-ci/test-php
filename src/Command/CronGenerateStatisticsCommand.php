@@ -70,31 +70,7 @@ class CronGenerateStatisticsCommand extends ContainerAwareCommand
         $progressInserting = $io->createProgressBar(1);
 
         // First we need to fetch all the views
-        $this->db->query('
-        INSERT INTO daily_statistics_views
-        
-        (`profile`, `date`, `views`, `created`, `updated`) (
-            SELECT
-            
-                -- Index 1
-                views.profile as profile,
-                
-                -- Index 2
-                DATE(views.date) as date,
-                
-                
-                -- Data
-                COUNT(views.id) as total_views,
-                
-                NOW() as created,
-                
-                NOW() as updated
-                
-            FROM views
-            WHERE DATE(views.deleted) = "9999-12-31"
-            GROUP BY views.profile, DATE(views.date)
-        )
-        ');
+
 
         $progressInserting->advance();
 

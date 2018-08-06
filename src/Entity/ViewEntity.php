@@ -1,9 +1,10 @@
 <?php
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BOF/Repository/ViewsRepository")
  * @ORM\Table(name="views")
  */
+
 class ViewEntity
 {
 

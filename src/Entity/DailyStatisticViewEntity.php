@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="BOF/Repository/DailyStatisticsViewsRepository")
  * @ORM\Table(name="daily_statistics_views")
  */
 class DailyStatisticViewEntity
