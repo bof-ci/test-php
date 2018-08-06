@@ -1,5 +1,9 @@
 <?php
 
+namespace BOF\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity(repositoryClass="BOF/Repository/DailyStatisticsViewsRepository")
  * @ORM\Table(name="daily_statistics_views")
