@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="BOF/Repository/DailyStatisticsViewsRepository")
  * @ORM\Table(name="daily_statistics_views")
  */
-class DailyStatisticViewEntity
+class DailyStatisticView
 {
 
     use \DefaultEntityTrait;
@@ -41,7 +41,7 @@ class DailyStatisticViewEntity
 
     /**
      * @param mixed $profile
-     * @return DailyStatisticViewEntity
+     * @return DailyStatisticView
      */
     public function setProfile($profile)
     {
@@ -59,9 +59,9 @@ class DailyStatisticViewEntity
 
     /**
      * @param DateTime $date
-     * @return DailyStatisticViewEntity
+     * @return DailyStatisticView
      */
-    public function setDate(DateTime $date): DailyStatisticViewEntity
+    public function setDate(DateTime $date): DailyStatisticView
     {
         $this->date = $date;
         return $this;
@@ -77,9 +77,9 @@ class DailyStatisticViewEntity
 
     /**
      * @param string $user_data
-     * @return DailyStatisticViewEntity
+     * @return DailyStatisticView
      */
-    public function setUserData(string $user_data): DailyStatisticViewEntity
+    public function setUserData(string $user_data): DailyStatisticView
     {
         $this->user_data = $user_data;
         return $this;

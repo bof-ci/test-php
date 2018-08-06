@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="BOF/Repository/ProfilesRepository")
  * @ORM\Table(name="profiles")
  */
-class ProfileEntity
+class Profile
 {
 
     use \DefaultEntityTrait;
@@ -49,9 +49,9 @@ class ProfileEntity
 
     /**
      * @param string $name
-     * @return ProfileEntity
+     * @return Profile
      */
-    public function setProfileName(string $name): ProfileEntity
+    public function setProfileName(string $name): Profile
     {
         $this->name = $name;
         return $this;

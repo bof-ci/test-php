@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="views")
  */
 
-class ViewEntity
+class View
 {
 
     use \DefaultEntityTrait;
@@ -42,7 +42,7 @@ class ViewEntity
 
     /**
      * @param mixed $profile
-     * @return ViewEntity
+     * @return View
      */
     public function setProfile($profile)
     {
@@ -60,9 +60,9 @@ class ViewEntity
 
     /**
      * @param DateTime $date
-     * @return ViewEntity
+     * @return View
      */
-    public function setDate(DateTime $date): ViewEntity
+    public function setDate(DateTime $date): View
     {
         $this->date = $date;
         return $this;
@@ -78,9 +78,9 @@ class ViewEntity
 
     /**
      * @param int $views
-     * @return ViewEntity
+     * @return View
      */
-    public function setViews(int $views): ViewEntity
+    public function setViews(int $views): View
     {
         $this->views = $views;
         return $this;

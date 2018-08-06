@@ -1,7 +1,9 @@
 <?php
 namespace BOF\Command;
 
+use BOF\Entity\Profile;
 use Doctrine\DBAL\Driver\Connection;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,9 +22,9 @@ class ReportYearlyCommand extends ContainerAwareCommand
     const TYPES = ['Profiles', 'Help'];
 
     /**
-     * @var Connection
+     * @var EntityManager
      */
-    protected $db;
+    protected $em;
 
     protected function configure()
     {
@@ -43,7 +45,7 @@ class ReportYearlyCommand extends ContainerAwareCommand
     {
 
         // Setting database
-        $this->db = $this->getContainer()->get('database_connection');
+        $em = $this->getContainer()->get('entity_manager');
 
         $io = new SymfonyStyle($input,$output);
 
@@ -65,7 +67,7 @@ class ReportYearlyCommand extends ContainerAwareCommand
 
             $this->yearQuestion($io);
 
-            $profiles = $this->db->query('SELECT name FROM profiles')->fetchAll();
+            $profiles = $this->em->getRepository(Profile::class)->findAll();
 
             // Show data in a table - headers, data
             $io->table(['Profile'], $profiles);
