@@ -2,7 +2,7 @@
 namespace BOF\Command;
 
 use BOF\Repository\ProfileDataProviderI;
-use BOF\Utils\ProfileDataHelper;
+use BOF\Utils\ProfileDataHelperI;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,12 +17,22 @@ class ReportYearlyCommand extends Command
     private $dataProvider;
 
     /**
+     * @var ProfileDataHelperI
+     */
+    private $dataHelper;
+
+    /**
      * ReportYearlyCommand constructor.
      * @param ProfileDataProviderI $dataProvider
+     * @param ProfileDataHelperI $dataHelper
      */
-    public function __construct(ProfileDataProviderI $dataProvider)
-    {
+    public function __construct(
+        ProfileDataProviderI $dataProvider,
+        ProfileDataHelperI $dataHelper
+    ) {
         $this->dataProvider = $dataProvider;
+        $this->dataHelper = $dataHelper;
+
         parent::__construct();
     }
 
@@ -47,12 +57,11 @@ class ReportYearlyCommand extends Command
         $views = $this->dataProvider->getYearlyResult();
         $profiles = $this->dataProvider->getAllProfileNames();
 
-        $dataFormatter = new ProfileDataHelper;
-        $data = $dataFormatter->tableViewDataAssemble($profiles, $views);
+        $data = $this->dataHelper->tableViewDataAssemble($profiles, $views);
 
         foreach ($data as $year => $formattedData) {
 
-            $header = $dataFormatter->getMonthsRange();
+            $header = $this->dataHelper->getMonthsRange();
             array_unshift($header, sprintf('%s %d', 'Profile', $year));
 
             // Show data in a table - headers, data

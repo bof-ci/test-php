@@ -29,15 +29,15 @@ class Profile implements ProfileDataProviderI
         $sql = "
             SELECT 
                 p.profile_name,
-                DATE_FORMAT(v.date, '%Y') AS 'year',
-                MONTH (v.date) AS 'month',
+                YEAR(v.date) AS 'year',
+                MONTH(v.date) AS 'month',
                 SUM(v.views) AS 'views'
             FROM
                 profiles p
                     INNER JOIN
                 views v USING (profile_id)
             GROUP BY p.profile_name , YEAR(v.date) , MONTH(v.date)
-            ORDER BY year , p.profile_name, DATE_FORMAT(v.date, '%m')
+            ORDER BY year , p.profile_name
         ";
 
         return $this->db->query($sql)->fetchAll();
@@ -49,6 +49,7 @@ class Profile implements ProfileDataProviderI
     public function getAllProfileNames(): array
     {
         $sql = 'SELECT profile_id as id, profile_name as name FROM profiles';
+
         return $this->db->query($sql)->fetchAll();
     }
 }

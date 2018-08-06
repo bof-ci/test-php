@@ -3,7 +3,7 @@
 namespace BOF\Utils;
 
 
-class ProfileDataHelper
+class ProfileDataHelper implements ProfileDataHelperI
 {
     /**
      * @param $profiles
