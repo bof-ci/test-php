@@ -1,9 +1,11 @@
 <?php
 namespace BOF;
 
+use BOF\Repository\DailyStatisticsViewsRepository;
+use BOF\Repository\ProfilesRepository;
+use BOF\Repository\ViewsRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Application as ConsoleApplication;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
@@ -19,8 +21,10 @@ class Application extends ConsoleApplication
     protected $container;
 
     /**
-     * @param string $name    The name of the application
-     * @param string $version The version of the application
+     * Application constructor.
+     * @param string $name
+     * @param string $version
+     * @throws \Exception
      */
     public function __construct($name = 'app', $version = '1')
     {
@@ -36,10 +40,16 @@ class Application extends ConsoleApplication
         foreach ($this->getConfiguredCommands() as $command) {
             $this->add($command);
         }
+
+        // Adding other dependencies
+        $this->container->register('DailyStatisticsViewsRepository', DailyStatisticsViewsRepository::class);
+        $this->container->register('ProfilesRepository', ProfilesRepository::class);
+        $this->container->register('ViewsRepository', ViewsRepository::class);
     }
 
     /**
-     * @return Command[] An array of default Command instances
+     * @return array
+     * @throws \Exception
      */
     protected function getConfiguredCommands()
     {

@@ -8,3 +8,8 @@ services:
         class: BOF\Command\ReportYearlyCommand
         tags:
             - { name: console.command }
+
+    app.command.cron_generate_stastics:
+            class: BOF\Command\CronGenerateStatisticsCommand
+            tags:
+                - { name: console.command }
