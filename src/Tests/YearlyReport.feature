@@ -7,7 +7,7 @@ GIVEN the fact that there is no historic data available
   THEN I expect to see all not deleted profiles indicating N/O for each month
 
 GIVEN the fact that I insert five new (not deleted) views for one of the profiles
-  WHEN I run the command `test:data:reset`, and I execute the `report:yearly Profiles` command
+  WHEN I run the command `cron:generate:statistics`, and I execute the `report:yearly Profiles` command
   THEN I see the increase in the numbers compared to before
 
 GIVEN the fact that I call the `report:yearly Profiles` command
