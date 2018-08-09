@@ -8,7 +8,6 @@ GRANT USAGE ON * . * TO 'bof-test'@'localhost' IDENTIFIED BY 'bof-test' WITH MAX
 
 GRANT ALL PRIVILEGES ON `bof_test` . * TO 'bof-test'@'localhost' WITH GRANT OPTION ;
 
-
 DROP TABLE IF EXISTS `daily_statistics_views`;
 CREATE TABLE `daily_statistics_views` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -48,7 +47,6 @@ VALUES
 /*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
 DROP TABLE IF EXISTS `views`;
 CREATE TABLE `views` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -62,3 +60,7 @@ CREATE TABLE `views` (
   KEY `profile` (`profile`),
   CONSTRAINT `views_ibfk_1` FOREIGN KEY (`profile`) REFERENCES `profiles` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- Settings
+SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));
