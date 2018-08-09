@@ -5,7 +5,7 @@ Estimation
 ----------
 Estimated: 5 hours
 
-Spent: 11 hours
+Spent: 9 hours
 
 
 Solution
