@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS `bof_test` DEFAULT CHARACTER SET utf8 COLLATE utf8
 DROP USER IF EXISTS 'bof-test'@'localhost';
 CREATE USER 'bof-test'@'localhost' IDENTIFIED BY 'bof-test';
 
-GRANT USAGE ON * . * TO 'bof-test'@'localhost' IDENTIFIED BY 'bof-test' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
+GRANT USAGE ON * . * TO 'bof-test'@'localhost';
 
 GRANT ALL PRIVILEGES ON `bof\_test` . * TO 'bof-test'@'localhost' WITH GRANT OPTION ;
 
