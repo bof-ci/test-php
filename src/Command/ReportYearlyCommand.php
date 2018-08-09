@@ -2,6 +2,11 @@
 namespace BOF\Command;
 
 use BOF\Entity\Profile;
+use BOF\Repository\DailyStatisticsViewsRepository;
+use BOF\Repository\ProfilesRepository;
+use BOF\Repository\ViewsRepository;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -20,9 +25,14 @@ class ReportYearlyCommand extends ContainerAwareCommand
     const TYPES = ['Profiles', 'Help'];
 
     /**
-     * @var EntityManager
+     * @var ProfilesRepository $profiles_repository
      */
-    protected $em;
+    protected $profiles_repository;
+
+    /**
+     * @var DailyStatisticsViewsRepository $daily_views_repository
+     */
+    protected $daily_views_repository;
 
     protected function configure()
     {
@@ -43,7 +53,8 @@ class ReportYearlyCommand extends ContainerAwareCommand
     {
 
         // Setting database
-        $em = $this->getContainer()->get('database_connection');
+        $this->profiles_repository = $this->getContainer()->get('ProfilesRepository');
+        $this->daily_views_repository = $this->getContainer()->get('DailyStatisticsViewsRepository');
 
         $io = new SymfonyStyle($input,$output);
 
@@ -61,36 +72,74 @@ class ReportYearlyCommand extends ContainerAwareCommand
         }
 
         // Argument: Profiles
-        if ($input->getArgument('type') == 'Profiles') {
+        if ($input->getArgument('type') == 'Profiles') { $this->getProfilesReport($io); }
 
-            $this->yearQuestion($io);
+    }
 
-            $profiles = $this->em->getRepository(Profile::class)->findAll();
+    /**
+     * Returning with profiles table
+     *
+     * @param SymfonyStyle $io
+     */
+    public function getProfilesReport(SymfonyStyle $io) {
 
-            // Show data in a table - headers, data
-            $io->table(['Profile'], $profiles);
+        $year = $this->yearQuestion($io);
+
+        try {
+            $profileAndYearPair = $this->daily_views_repository->searchByYearAndMonth($year);
+        } catch (DBALException $e) {
+            throw new \RuntimeException($e->getMessage());
+        }
+
+        $columns = ['Profile        '.$year];
+        $rows = [];
+
+        foreach ($profileAndYearPair as $key => $item) {
+
+            foreach ($item as $columnName => $value) {
+
+                if ($columnName == 'profile')
+                    continue;
+
+                // Adding columns, with capital first letters
+                $columnToAdd = ucfirst($columnName);
+
+                if (in_array($columnToAdd, $columns))
+                    continue;
+
+                $columns[] = $columnToAdd;
+            }
+
+
+
+            // Adding rows
+            $rows[] = $item;
 
         }
+
+        // Creating table
+        $io->table($columns, $rows);
+
 
     }
 
     /**
      * @param SymfonyStyle $io
-     * @return string
+     * @return mixed
      */
-    protected function yearQuestion(SymfonyStyle $io) {
+    protected function yearQuestion(SymfonyStyle $io)
+    {
 
         $currentYear = (new \DateTime())->format('Y');
 
-        $question = new Question(sprintf('Enter a year to display (default: %d)',  $currentYear), $currentYear);
-
-        $question->setValidator(function ($answer) {
-            if (!(\DateTime::createFromFormat('Y', $answer))) {
-                throw new RuntimeException('Invalid year');
+        $question = $io->ask(sprintf('Enter a year to display (default: %d)', $currentYear), $currentYear, function ($number) {
+            if (!is_numeric($number)) {
+                throw new InvalidArgumentException('You must type a number.');
             }
+
+            return (int) $number;
         });
 
-        return $io->askQuestion($question);
-
+        return $question;
     }
 }

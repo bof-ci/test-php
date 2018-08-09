@@ -1,7 +1,9 @@
 <?php
 namespace BOF\Command;
 
-use Doctrine\DBAL\Connection;
+use BOF\Repository\ProfilesRepository;
+use BOF\Repository\ViewsRepository;
+use Doctrine\DBAL\DBALException;
 use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -26,10 +28,14 @@ class TestDataResetCommand extends ContainerAwareCommand
     protected $faker;
 
     /**
-     * @var Connection
+     * @var ViewsRepository
      */
-    protected $db;
+    protected $views_repository;
 
+    /**
+     * @var ProfilesRepository
+     */
+    protected $profiles_repository;
 
     /**
      * Command config parameters and constructor
@@ -53,7 +59,8 @@ class TestDataResetCommand extends ContainerAwareCommand
     {
 
         $this->faker = Factory::create();
-        $this->db = $this->getContainer()->get('database_connection');
+        $this->views_repository = $this->getContainer()->get('ViewsRepository');
+        $this->profiles_repository = $this->getContainer()->get('ProfilesRepository');
 
         // Generating data for `views` table
         $this->generateViews($input, $output);
@@ -78,6 +85,7 @@ class TestDataResetCommand extends ContainerAwareCommand
      */
     protected function generateViews(InputInterface $input, OutputInterface $output)
     {
+
         $io = new SymfonyStyle($input, $output);
         $io->title('Generating views');
 
@@ -85,16 +93,14 @@ class TestDataResetCommand extends ContainerAwareCommand
         $startDate = (new \DateTime())->setDate(2014,9,1);
         $endDate = (new \DateTime())->setDate(2018, 8, 1);
 
-        $dateTimeFormattedNow = (new \DateTime())->format('Y-m-d H:i:s');
-
         // Truncating the table in case we already ran the command
-        $this->db->query('TRUNCATE views');
+        $this->views_repository->query('TRUNCATE views');
 
         $views = [];
 
         try {
             // Creating the views by profiles
-            $profiles = $this->db->query('SELECT id, name FROM profiles')->fetchAll();
+            $profiles = $this->profiles_repository->fetchAll('id, name');
             $progressProfiles = $io->createProgressBar(count($profiles));
 
             foreach ($profiles as $profile) {
@@ -118,9 +124,7 @@ class TestDataResetCommand extends ContainerAwareCommand
                     $views[] = [
                         'profile' => $profileId,
                         'date' => $date->format('Y-m-d H:i:s'),
-                        'user_data' => ['browser' => $browser],
-                        'created' => $dateTimeFormattedNow,
-                        'updated' => $dateTimeFormattedNow
+                        'user_data' => json_encode(['browser' => $browser])
                     ];
 
 
@@ -133,16 +137,15 @@ class TestDataResetCommand extends ContainerAwareCommand
 
             // Inserting the data
             foreach ($views as $view) {
-                $sql = sprintf(
-                    "INSERT INTO views (`profile`, `date`, `user_data`, `created`, `updated`) VALUES (%d, '%s', '%s', '%s', '%s')",
-                    $view['profile'],
-                    $view['date'],
-                    json_encode($view['user_data']),
-                    $view['created'],
-                    $view['updated']
-                );
-                $this->db->query($sql);
-                $progressInserting->advance();
+
+                // Exception handling
+                try {
+                    $this->views_repository->insert($view);
+                    $progressInserting->advance();
+                } catch (DBALException $e) {
+                    throw new \RuntimeException($e->getMessage());
+                }
+
             }
 
             // New line at the end

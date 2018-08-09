@@ -40,7 +40,7 @@ abstract class AbstractRepository extends Application
      * @return mixed
      */
     protected function getTable() {
-        return $this->getTable();
+        return $this->table;
     }
 
     /**
@@ -98,6 +98,32 @@ abstract class AbstractRepository extends Application
 
         return $this->db->update($this->getTable(), ['deleted' => (new \DateTime())->format('Y-m-d')], ['id' => $id]);
 
+    }
+
+    /**
+     * Fetching all, not deleted rows
+     *
+     * @param string $columns
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function fetchAll(string $columns = "*") {
+
+        return $this->query(
+            sprintf('SELECT %s FROM `%s` WHERE DATE(deleted) = "9999-12-31"', $columns, $this->getTable())
+        )->fetchAll();
+
+    }
+
+    /**
+     * Running simple query
+     *
+     * @param $sql
+     * @return \Doctrine\DBAL\Driver\Statement
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function query(string $sql) {
+        return $this->db->query($sql);
     }
 
 }

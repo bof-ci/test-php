@@ -1,11 +1,7 @@
 <?php
 namespace BOF\Command;
 
-use Doctrine\DBAL\Driver\Connection;
-use Faker\Factory;
-use Faker\Generator;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
+use BOF\Repository\DailyStatisticsViewsRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -18,9 +14,9 @@ class CronGenerateStatisticsCommand extends ContainerAwareCommand
 {
 
     /**
-     * @var Connection
+     * @var DailyStatisticsViewsRepository
      */
-    protected $db;
+    protected $views_repository;
 
 
     /**
@@ -44,7 +40,7 @@ class CronGenerateStatisticsCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        $this->db = $this->getContainer()->get('database_connection');
+        $this->views_repository = $this->getContainer()->get("DailyStatisticsViewsRepository");
 
         // Generating data for `daily_statistics_views` table
         $this->generateDailyStatisticsViews($input, $output);
@@ -65,12 +61,12 @@ class CronGenerateStatisticsCommand extends ContainerAwareCommand
         $io->title('Generating statistics');
 
         // Truncating the table in case we already ran the command
-        $this->db->query('TRUNCATE daily_statistics_views');
+        $this->views_repository->query('TRUNCATE daily_statistics_views');
 
         $progressInserting = $io->createProgressBar(1);
 
         // First we need to fetch all the views
-
+        $this->views_repository->generateDailyByViews();
 
         $progressInserting->advance();
 
